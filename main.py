@@ -75,7 +75,7 @@ def lambda_handler(event, context):
 
     s3_client = boto3.client('s3')
 
-    S3_URI = os.getenv('S3_URI') # s3://{bucket}/../exchanges.csv
+    S3_URI = os.getenv('S3_URI') # s3://bucket-name/path/to/file.csv
     bucket_name = S3_URI.split('s3://')[1].split('/')[0]
     key = S3_URI.split('s3://')[1].split('/', 1)[1]
 
@@ -137,5 +137,8 @@ def lambda_handler(event, context):
     # Upload to S3
     exchanges.to_csv(lambda_exchange_path, index=False)
     s3_client.upload_file(lambda_exchange_path, bucket_name, key)
+
+    # Make file public
+    s3_client.put_object_acl(ACL='public-read', Bucket=bucket_name, Key=key)
 
     return {"message": "success"}
