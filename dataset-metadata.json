@@ -1,6 +1,6 @@
 {
   "title": "Daily Updated Exchange Rates (2015-now) (USD)",
-  "id": "daily-updated-exchange-rates-2015-now-usd",
+  "id": "mathoholic/daily-updated-exchange-rates-2015-now-usd",
   "licenses": [{"name": "CC0-1.0"}],
   "subtitle": "Track daily exchange rates for USD against major global currencies since 2015",
   "description": "Explore a rich collection of daily records capturing the top 56 global currencies from 2015 to the present day. This meticulously maintained dataset provides valuable insights into currency trends, exchange rates, and market dynamics.",
