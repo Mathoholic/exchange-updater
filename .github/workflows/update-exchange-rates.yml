@@ -21,6 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        pip install --upgrade kaggle
 
     - name: Run scraper
       run: python daily-currency-update.py
@@ -29,17 +30,22 @@ jobs:
       run: |
         git config --global user.name "Mathoholic"
         git config --global user.email "litemathoholic@gmail.com"
-        # List files in directory for debugging
-        ls -la
-        # Add all CSV files in case the path changes
-        git add *.csv
+        git status
+        git add "exchange-rates.csv"
         git commit -m "Update exchange rates data" || exit 0
         git push
 
-    - name: Upload to Kaggle
-      env:
-        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-        KAGGLE_DATASET: ${{ secrets.KAGGLE_DATASET }}
+    - name: Configure Kaggle
       run: |
-        kaggle datasets version -p . -m "Updated exchange rates data" -d "$KAGGLE_DATASET"
+        mkdir -p ~/.kaggle
+        echo "{\"username\":\"${{ secrets.KAGGLE_USERNAME }}\",\"key\":\"${{ secrets.KAGGLE_KEY }}\"}" > ~/.kaggle/kaggle.json
+        chmod 600 ~/.kaggle/kaggle.json
+
+    - name: Upload to Kaggle
+      run: |
+        kaggle datasets version \
+          --dir-mode zip \
+          --message "Updated exchange rates data" \
+          --path . \
+          --quiet \
+          ${{ secrets.KAGGLE_DATASET }}
