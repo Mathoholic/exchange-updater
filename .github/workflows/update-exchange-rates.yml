@@ -29,7 +29,10 @@ jobs:
       run: |
         git config --global user.name "Mathoholic"
         git config --global user.email "litemathoholic@gmail.com"
-        git add exchange_rates.csv
+        # List files in directory for debugging
+        ls -la
+        # Add all CSV files in case the path changes
+        git add *.csv
         git commit -m "Update exchange rates data" || exit 0
         git push
 

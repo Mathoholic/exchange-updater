@@ -25,7 +25,7 @@ currency_mappings = {
     'US Dollar': 'USD', 'Venezuelan Bolivar': 'VES'
 }
 
-DATA_FILE = "./exchange-rates.csv"
+DATA_FILE = "exchange-rates.csv"
 
 def get_last_date():
     if os.path.exists(DATA_FILE):
