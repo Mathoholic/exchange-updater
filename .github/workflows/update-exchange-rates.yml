@@ -31,6 +31,7 @@ jobs:
 
     - name: Create dataset metadata
       run: |
+        mkdir -p dataset
         echo '{
           "title": "Daily Updated Exchange Rates (2015-now) (USD)",
           "id": "mathoholic/daily-updated-exchange-rates-2015-now-usd",
@@ -50,7 +51,9 @@ jobs:
               }
             }
           ]
-        }' > dataset-metadata.json
+        }' > dataset/dataset-metadata.json
+
+        cp exchange-rates.csv dataset/
 
     - name: Commit and push if changed
       run: |
@@ -61,4 +64,4 @@ jobs:
         git push
 
     - name: Upload to Kaggle
-      run: kaggle datasets version -p . -m "Updated exchange rates data"
+      run: kaggle datasets version -p dataset -m "Updated exchange rates data"
