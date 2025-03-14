@@ -113,6 +113,5 @@ The complete dataset is available on Kaggle:
 
 ## Contact
 
-Your Name - [@mathoholic](https://github.com/mathoholic)
-
+Name - [@mathoholic](https://github.com/mathoholic)
 Project Link: [https://github.com/mathoholic/exchange-updater](https://github.com/mathoholic/exchange-updater)
