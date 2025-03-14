@@ -8,6 +8,9 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
 
     steps:
     - name: Checkout code
@@ -21,22 +24,44 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        pip install pandas tqdm beautifulsoup4 lxml
+        pip install --upgrade kaggle
 
     - name: Run scraper
-      run: python exchange_rate_scraper.py
+      run: python daily-currency-update.py
+
+    - name: Create dataset metadata
+      run: |
+        mkdir -p dataset
+        echo '{
+          "title": "Daily Updated Exchange Rates (2015-now) (USD)",
+          "id": "mathoholic/daily-updated-exchange-rates-2015-now-usd",
+          "licenses": [{"name": "CC0-1.0"}],
+          "subtitle": "Track daily exchange rates for USD against major global currencies since 2015",
+          "description": "Explore a rich collection of daily records capturing the top 56 global currencies from 2015 to the present day. This meticulously maintained dataset provides valuable insights into currency trends, exchange rates, and market dynamics.",
+          "resources": [
+            {
+              "path": "exchange-rates.csv",
+              "description": "Daily exchange rates against USD for major global currencies",
+              "schema": {
+                "fields": [
+                  {"name": "date", "description": "Date of exchange rate", "type": "date"},
+                  {"name": "currency", "description": "Currency code (ISO)", "type": "string"},
+                  {"name": "rate", "description": "Exchange rate against USD", "type": "number"}
+                ]
+              }
+            }
+          ]
+        }' > dataset/dataset-metadata.json
+
+        cp exchange-rates.csv dataset/
 
     - name: Commit and push if changed
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
-        git add exchange-rates.csv
+        git config --global user.name "Mathoholic"
+        git config --global user.email "litemathoholic@gmail.com"
+        git add "exchange-rates.csv" "dataset-metadata.json"
         git commit -m "Update exchange rates data" || exit 0
         git push
 
     - name: Upload to Kaggle
-      env:
-        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-      run: |
-        kaggle datasets version -p . -m "Updated exchange rates data"
+      run: kaggle datasets version -p dataset -m "Updated exchange rates data"
