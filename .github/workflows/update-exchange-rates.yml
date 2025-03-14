@@ -61,4 +61,4 @@ jobs:
         git push
 
     - name: Upload to Kaggle
-      run: kaggle datasets version -p . -m "Updated exchange rates data" -d "mathoholic/daily-updated-exchange-rates-2015-now-usd"
+      run: kaggle datasets version -p . -m "Updated exchange rates data"
